@@ -1,6 +1,30 @@
 import os
 import pandas as pd
 from io import StringIO
+from sklearn.preprocessing import MinMaxScaler
+
+language_dict = {
+    'fr': 'French',
+    'es': 'Spanish',
+    'de': 'German',
+    'ja': 'Japanese',
+    'zh': 'Chinese (zh)',
+    'pt': 'Portuguese',
+    'it': 'Italian',
+    'nu': 'Nauruan',
+    'ko': 'Korean',
+    'cs': 'Czech',
+    'nl': 'Dutch',
+    'ar': 'Arabic',
+    'sv': 'Swedish',
+    'hi': 'Hindi',
+    'tr': 'Turkish',
+    'pl': 'Polish',
+    'tl': 'Tagalog',
+    'xx': 'Unknown',
+    'da': 'Danish',
+    'cn': 'Chinese (cn)'  # This can be treated the same as 'zh'
+}
 
 # prints quick dimensions of any dataframe
 def get_df_dimensions(df):
@@ -16,7 +40,6 @@ def get_top5_records_df_columnwise(df):
 
 # returns dimensions for each file in given dataset and it's list of columns
 def get_dataset_dimensions(directory_path):
-    directory_path = '../Data/TMDB'
     # List all files and directories in the current directory
     files_in_directory = os.listdir(directory_path)
     for filename in files_in_directory:
@@ -80,3 +103,186 @@ def describe_data(df):
                     print(f"    {val}", file=output)
     
     return output.getvalue()
+
+# TMDB Dataset
+def tmdb():
+    directory_path = '../Data/TMDB'
+    get_dataset_dimensions(directory_path)
+
+    # analyse the columns of TMDB dataset
+    directory_path = '../Data/TMDB/TMDB.csv'
+    df = pd.read_csv(f"{directory_path}")
+    print(describe_data(df))
+
+    # based on analysis so far, datatype for some columns needs to be changed
+    # details given in Milestone1.pdf
+
+    # drop columns which we won't be using
+    print("***** Dropping unnecessary columns from TMDB dataset *****\n")
+    print("Current Dimensions of TMDB Dataset")
+    get_df_dimensions(df)
+    print()
+    cols_to_be_dropped = ['backdrop_path', 'homepage', 'keywords', 'overview', 'tagline',  'poster_path', 'imdb_id']
+    df.drop(columns=cols_to_be_dropped, inplace=True)
+    print(f"Dimensions of TMDB dataset after dropping unnecessary columns... {len(cols_to_be_dropped)} columns are dropped")
+    get_df_dimensions(df)
+    print()
+
+    # let's analyse the data more by displaying couple of values of each column from dataframe
+    print("***** Analyse columns based on data, identify their conversion type *****\n")
+    get_top5_records_df_columnwise(df)
+
+    # notice that datatype for some columns needs to be changed.
+    # details of this is given in Milestone1.pdf
+    print("***** Aligning dataype for columns in process... *****")
+    # correcting date format
+    df["release_date"] = pd.to_datetime(df["release_date"], format = "mixed" , errors='coerce')
+    # correcting object to string datatype
+    cols_to_string_list = ["original_language", "original_title", "title", "id"]
+    for col in cols_to_string_list:
+        df[col] = df[col].astype(pd.StringDtype())
+    # correcting object to category datatype
+    df["status"] = df["status"].astype("category")
+    print("***** Aligning dataype for columns completed... *****")
+    
+    # let's see the updated dataframe now
+    print("***** Checking if all variables datatypes are correct now *****\n")
+    print(describe_data(df))
+
+    print(df.describe())
+
+    # check null counts
+    print("***** Displaying null counts *****\n")
+    print(df.isnull().sum())
+
+    # majority of the columns does not have data for revenue and budget. Drop them
+    print("***** Dropping Revenue and Budget columns *****\n")
+    df.drop(columns=['revenue', 'budget'], inplace=True)
+
+    print(df.describe())
+    print(df.isnull().sum())
+    print(df.shape)
+
+    print("***** Filling null values with default_values *****")
+    df_filled = df.fillna({
+        'title': 'Unknown',
+        'original_title': 'Unknown',
+        'genres': 'Unknown',
+        'production_companies': 'Unknown',
+        'production_countries': 'Unknown',
+        'spoken_languages': 'Unknown'
+    })
+
+    print("Performing min-max scale for popularity column")
+    scaler = MinMaxScaler(feature_range=(0, 10))
+    df_filled['popularity'] = scaler.fit_transform(df[['popularity']])
+
+    print("Removing noisy data from runtime column")
+    df_filled['runtime'] = df['runtime'].apply(lambda x: 0 if x < 0 else x)
+
+    print("The filled dataset is \n")
+    print(df_filled.isnull().sum())
+    print(df_filled.describe())
+
+    print("The Final columns of the Dataset are:")
+    print(df_filled.columns)
+
+    return df_filled
+
+def imdb():
+    directory_path = '../Data/IMDB'
+    get_dataset_dimensions(directory_path)
+
+    # analyse the columns of IMDB dataset
+    directory_path = '../Data/IMDB'
+
+    print("\n***** All IMDB files are separated by genre, but contains same columns *****")
+    print("\n***** So let's merge them, for easy processing. Note: they do have 'genre' column *****")
+    # List all files and directories in the current directory
+    files_in_directory = os.listdir(directory_path)
+    df_list = []
+    for filename in files_in_directory:
+        if filename.endswith(".csv"):
+            df_list.append(pd.read_csv(f"{directory_path}/{filename}"))
+    merged_df = pd.concat(df_list, ignore_index = True)
+    print("\n***** Merged dataset dimensions are: *****")
+    total_rows, total_cols = merged_df.shape
+    print(f"Number of rows {total_rows} and Number of cols {total_cols}")
+
+    print("\n***** Describing Data *****")
+    print(describe_data(merged_df))
+
+    print("***** Dropping unnecessary columns from IMDB dataset *****\n")
+    print("Current Dimensions of TMDB Dataset")
+    get_df_dimensions(merged_df)
+    print()
+    cols_to_be_dropped = ['certificate', 'description']
+    merged_df.drop(columns=cols_to_be_dropped, inplace=True)
+    print(f"Dimensions of TMDB dataset after dropping unnecessary columns... {len(cols_to_be_dropped)} columns are dropped")
+    get_df_dimensions(merged_df)
+    print()
+
+    # let's analyse the data more by displaying couple of values of each column from dataframe
+    print("***** Analyse columns based on data, identify their conversion type *****\n")
+    get_top5_records_df_columnwise(merged_df)
+
+    # notice that datatype for some columns needs to be changed.
+    # details of this is given in Milestone1.pdf
+    print("***** Aligning dataype for columns in process... *****")
+    # correcting object to string datatype
+    cols_to_string_list = ["movie_id", "movie_name"]
+    for col in cols_to_string_list:
+        merged_df[col] = merged_df[col].astype(pd.StringDtype())
+    # correcting object to int datatype
+    merged_df["year"] = pd.to_numeric(merged_df['year'], errors='coerce')
+    merged_df['runtime'] = pd.to_numeric(merged_df['runtime'].str.replace(' min', ''), errors='coerce')
+    
+    print("***** Aligning dataype for columns completed... *****")
+
+    # let's see the updated dataframe now
+    print("***** Checking if all variables datatypes are correct now *****\n")
+    print(describe_data(merged_df))
+
+    print(merged_df.describe())
+
+    # check null counts
+    print("***** Displaying null counts *****\n")
+    print(merged_df.isnull().sum())
+
+    print(merged_df.shape)
+
+    print("\n***** Rating is imporatnat for us and we have a lot of data, so drop data which does not have rating *****")
+    df_filtered = merged_df[(merged_df['rating'] != 0) & (merged_df['rating'].notna())]
+
+    # check null counts
+    print("***** Displaying null counts (after rating filtering) *****\n")
+    print(df_filtered.isnull().sum())
+
+    print(df_filtered.shape)
+
+    # majority of the columns does not have data for revenue and budget. Drop them
+    print("***** Dropping Gross column, as it's not useful *****\n")
+    df_filtered.drop(columns=['gross(in $)'], inplace=True)
+
+    print(df_filtered.describe())
+    print(df_filtered.isnull().sum())
+    print(df_filtered.shape)
+
+    print("***** Filling null values with default_values *****")
+    df_filled = df_filtered.fillna({
+        'runtime': 0,
+        'director': 'Unknown',
+        'director_id': 'Unknown',
+        'star': 'Unknown',
+        'star_id': 'Unknown'
+    })
+
+    print(df_filled.describe())
+    print(df_filled.isnull().sum())
+    print(df_filled.shape)
+
+    print(df_filled.columns)
+
+
+def movielens():
+    print("To do do do do do o....")
