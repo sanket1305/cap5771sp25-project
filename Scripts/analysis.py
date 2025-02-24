@@ -3,29 +3,6 @@ import pandas as pd
 from io import StringIO
 from sklearn.preprocessing import MinMaxScaler
 
-language_dict = {
-    'fr': 'French',
-    'es': 'Spanish',
-    'de': 'German',
-    'ja': 'Japanese',
-    'zh': 'Chinese (zh)',
-    'pt': 'Portuguese',
-    'it': 'Italian',
-    'nu': 'Nauruan',
-    'ko': 'Korean',
-    'cs': 'Czech',
-    'nl': 'Dutch',
-    'ar': 'Arabic',
-    'sv': 'Swedish',
-    'hi': 'Hindi',
-    'tr': 'Turkish',
-    'pl': 'Polish',
-    'tl': 'Tagalog',
-    'xx': 'Unknown',
-    'da': 'Danish',
-    'cn': 'Chinese (cn)'  # This can be treated the same as 'zh'
-}
-
 # prints quick dimensions of any dataframe
 def get_df_dimensions(df):
     rows, cols = df.shape
@@ -333,5 +310,22 @@ def imdb():
 
     print(df_filled['movie_id'].head())
 
+    return df_filled
+
+
 def movielens():
-    print("To do do do do do o....")
+    directory_path = '../Data/movielens/links.csv'
+    
+    movie_df = pd.read_csv(f"{directory_path}")
+    print(movie_df.shape)
+    print(describe_data(movie_df))
+
+    directory_path = '../Data/movielens/tags.csv'
+
+    tags_df = pd.read_csv(f"{directory_path}")
+    print(tags_df.shape)
+    print(describe_data(tags_df))
+
+    merged_df = pd.merge(movie_df, tags_df, on='movieId')
+
+    return merged_df
