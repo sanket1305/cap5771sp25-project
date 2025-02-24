@@ -20,8 +20,7 @@ To run the project, please review the following key files in the repository:
 ### Data Files
 
 Some of the data files used in this project are too large to upload directly to GitHub due to file size limitations. However, you can download the full dataset (which contains the exact data files used in the project) from the following location:  
-[Download Data Files](https://drive.google.com/drive/folders/1O3tv2h5cheKzi6Cub4i18PPCmK4Swqf_?usp=sharing) (Replace with the actual URL or file path)
-
+[Download Data Files](https://drive.google.com/drive/folders/1O3tv2h5cheKzi6Cub4i18PPCmK4Swqf_?usp=sharing)
 ### Running the Project
 
 To generate all the images and analyze the data, simply run the `main.py` file. The following will happen:
