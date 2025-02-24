@@ -155,16 +155,26 @@ def tmdb():
     print("***** Displaying null counts *****\n")
     print(df.isnull().sum())
 
-    # majority of the columns does not have data for revenue and budget. Drop them
-    print("***** Dropping Revenue and Budget columns *****\n")
-    df.drop(columns=['revenue', 'budget'], inplace=True)
+    print("\n***** vote_average (rating) is important for us and we have a lot of data, so drop data which does not have rating *****")
+    df_filtered = df[(df['vote_average'] != 0) & (df['vote_average'].notna())].copy()
+    df_filtered = df[(df['vote_average'] != 0) & (df['vote_average'].notna()) & (df['release_date'].notna())].copy()
 
-    print(df.describe())
-    print(df.isnull().sum())
-    print(df.shape)
+    # check null counts
+    print("***** Displaying null counts (after rating filtering) *****\n")
+    print(df_filtered.isnull().sum())
+
+    print(df_filtered.shape)
+
+    # majority of the columns does not have data for revenue and budget. Drop them
+    print("***** Dropping Revenue, Budget, Original title and Genres (we get this from IMDB) columns *****\n")
+    df_filtered.drop(columns=['revenue', 'budget', 'original_title', 'genres'], inplace=True)
+
+    print(df_filtered.describe())
+    print(df_filtered.isnull().sum())
+    print(df_filtered.shape)
 
     print("***** Filling null values with default_values *****")
-    df_filled = df.fillna({
+    df_filled = df_filtered.fillna({
         'title': 'Unknown',
         'original_title': 'Unknown',
         'genres': 'Unknown',
@@ -175,10 +185,10 @@ def tmdb():
 
     print("Performing min-max scale for popularity column")
     scaler = MinMaxScaler(feature_range=(0, 10))
-    df_filled['popularity'] = scaler.fit_transform(df[['popularity']])
+    df_filled['popularity'] = scaler.fit_transform(df_filled[['popularity']])
 
     print("Removing noisy data from runtime column")
-    df_filled['runtime'] = df['runtime'].apply(lambda x: 0 if x < 0 else x)
+    df_filled['runtime'] = df_filled['runtime'].apply(lambda x: 0 if x < 0 else x)
 
     print("The filled dataset is \n")
     print(df_filled.isnull().sum())
@@ -186,6 +196,40 @@ def tmdb():
 
     print("The Final columns of the Dataset are:")
     print(df_filled.columns)
+
+    get_top5_records_df_columnwise(df_filled)
+
+    print("\n\n ********** Now let's normalise our dataframe **********")
+    print("\n***** We will separate Movies, Production_companies and production_country datasets *****")
+
+    # Step 1: Normalize the 'production_companies' column
+    companies_normalized = df_filled[['id', 'production_companies']].copy()
+    companies_normalized['production_companies'] = companies_normalized['production_companies'].str.split(',')
+    companies_normalized = companies_normalized[['id', 'production_companies']].explode('production_companies')
+    # companies_normalized['production_companies'] = companies_normalized['production_companies'].str.strip()
+
+    # Step 2: Normalize the 'production_countries' column
+    countries_normalized = df_filled[['id', 'production_countries']].copy()
+    countries_normalized['production_countries'] = countries_normalized['production_countries'].str.split(',')
+    countries_normalized = countries_normalized[['id', 'production_countries']].explode('production_countries')
+    # countries_normalized['production_countries'] = countries_normalized['production_countries'].str.strip()
+
+    # Merge back with the original movie DataFrame (excluding the columns to be removed)
+    df_normalized = df_filled.drop(columns=['production_companies', 'production_countries'])
+
+    # Merge back with the normalized DataFrames
+    df_companies = pd.merge(companies_normalized, df_normalized[['id', 'title']], on='id', how='left')
+    df_countries = pd.merge(countries_normalized, df_normalized[['id', 'title']], on='id', how='left')
+
+    # Print the final DataFrames
+    print("Original DataFrame (after removing production columns):")
+    print(df_normalized)
+
+    print("\nNormalized Production Companies DataFrame:")
+    print(df_companies)
+
+    print("\nNormalized Production Countries DataFrame:")
+    print(df_countries)
 
     return df_filled
 
@@ -283,6 +327,11 @@ def imdb():
 
     print(df_filled.columns)
 
+    print(df_filled['movie_id'].head())
+
+    df_filled['movie_id'] = df_filled['movie_id'].str[2:]
+
+    print(df_filled['movie_id'].head())
 
 def movielens():
     print("To do do do do do o....")

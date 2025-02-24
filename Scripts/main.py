@@ -1,8 +1,8 @@
 from analysis import imdb, movielens, tmdb
 
 # analysis for IMDB Dataset
-imdb()
-# tmdb()
+# imdb()
+tmdb()
 
 # analysis for TMDB Dataset
 # df_tmdb = tmdb()
