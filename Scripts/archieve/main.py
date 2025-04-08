@@ -1,7 +1,7 @@
 import sqlite3
 import pandas as pd
-from analysis import imdb, movielens, tmdb
-from visualization import movie_language_analysis, tmdb_vote_correlation, ratings_correlation, genre_analysis, tag_analysis
+from Scripts.archieve.analysis import imdb, movielens, tmdb
+from Scripts.archieve.visualization import movie_language_analysis, tmdb_vote_correlation, ratings_correlation, genre_analysis, tag_analysis
 
 # connect to the SQLite database
 db_name = '../Data/movies.db'
