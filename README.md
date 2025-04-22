@@ -35,6 +35,7 @@ Make sure to have the following Python libraries installed:
 - pandas
 - numpy
 - matplotlib
+- sqlite
 - seaborn
 - scikit-learn
 
@@ -48,10 +49,7 @@ pip install pandas numpy matplotlib seaborn scikit-learn
 
 - Download the dataset (instructions provided above).
 - Place the dataset files in the Data/ folder.
-- Run the main.py file using the command:
-
-```python3
-python main.py
-```
+- There are 2 .ipynb files
+- Execute them in order of milestones
 
 This will trigger the data analysis and generate plots, which will be saved in the Images/ folder.
