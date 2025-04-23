@@ -4,3 +4,6 @@ __pycache__
 .virtual_documents
 .ipynb_checkpoints
 Scripts/experiments
+Scripts/data_splits
+Scripts/models
+Scripts/saved_*
