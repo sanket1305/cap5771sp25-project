@@ -195,8 +195,8 @@ with tabs[0]:
         st.markdown('</div>', unsafe_allow_html=True)
         
     with col2:
-        st.markdown(f'<div class="metric-value">{orig_df["year"].max() - orig_df["year"].min()}</div>', unsafe_allow_html=True)
-        st.markdown(f'<div class="metric-label">Years ({orig_df["year"].min()} - {orig_df["year"].max()})</div>', unsafe_allow_html=True)
+        st.markdown(f'<div class="metric-value">{int(orig_df["year"].max() - orig_df["year"].min())}</div>', unsafe_allow_html=True)
+        st.markdown(f'<div class="metric-label">Years ({int(orig_df["year"].min())} - {int(orig_df["year"].max())})</div>', unsafe_allow_html=True)
         st.markdown('</div>', unsafe_allow_html=True)
         
     with col3:
