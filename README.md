@@ -13,6 +13,26 @@ To run the project, please review the key files listed below.
 
 ---
 
+## Data Licenses
+
+The datasets used in this project are obtained from publicly available and trustworthy sources. Each dataset adheres to its respective licensing agreements, as detailed below:
+
+- **IMDB Dataset (by Genre)**  
+  - **Source:** Kaggle / IMDB  
+  - **License:** Licensed under [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/)
+
+- **MovieLens Dataset**  
+  - **Source:** GroupLens Research  
+  - **License:** Licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/), allowing reuse with proper attribution.
+
+- **TMDB 2023 Dataset**  
+  - **Source:** Kaggle / TMDB  
+  - **License:** Licensed under [Open Data Commons Attribution License (ODC-By) v1.0](https://opendatacommons.org/licenses/by/1-0/)
+
+All datasets are used solely for academic purposes and have not been redistributed or modified beyond the scope of analysis within this project.
+
+---
+
 ## 📁 Files Overview
 
 1. **`.ipynb` Notebooks** – Contains all backend code including data sourcing, model training, and model evaluation.
@@ -62,16 +82,14 @@ Launch the Jupyter notebooks using Anaconda Navigator or the terminal.
     Trains three additional models: KMeans, KNN, and HDBScan. These models and their respective features/labels are stored in nested directories inside `models/`.
     
 4. **Run `Milestone3.ipynb`**  
-    Tests and evaluates performance of all six distinct models.
+    Tests and evaluates performance of all six distinct models (Linear Regresion was discarded and not tested on test data due to it's high MSE score insights).
     
 5. **Launch the Web UI**  
     Execute the following command in your terminal:
     
-    bash
-    
-    CopyEdit
-    
-    `streamlit run dashboard.py`
+   ``` bash
+    streamlit run dashboard.py
+   ```
     
     This will open the dashboard in your default web browser.
     
@@ -103,11 +121,9 @@ Make sure the following Python libraries are installed:
 
 Install via pip:
 
-bash
-
-CopyEdit
-
-`pip install pandas numpy matplotlib seaborn scikit-learn plotly hdbscan streamlit`
+```bash
+pip install pandas numpy matplotlib seaborn scikit-learn plotly hdbscan streamlit
+```
 
 > 🔍 If additional package errors occur, install the missing packages before rerunning the notebooks or app.
 
