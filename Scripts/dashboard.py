@@ -37,37 +37,6 @@ def get_genres_distribution(df):
     
     return genre_df
 
-# helper function for plotting graphs on UI... no longer in use (but I need it for future)
-# def get_director_stats(df):
-#     director_movies = {}
-#     director_ratings = {}
-    
-#     for _, row in df.iterrows():
-#         if pd.isna(row['directors']) or pd.isna(row['imdb_rating']):
-#             continue
-        
-#         for director in row['directors'].split(','):
-#             director = director.strip()
-#             if director in director_movies:
-#                 director_movies[director] += 1
-#                 director_ratings[director].append(row['imdb_rating'])
-#             else:
-#                 director_movies[director] = 1
-#                 director_ratings[director] = [row['imdb_rating']]
-    
-#     # Calculate average ratings
-#     director_avg_rating = {d: sum(ratings)/len(ratings) for d, ratings in director_ratings.items() if len(ratings) >= 3}
-    
-#     # Create dataframe
-#     director_df = pd.DataFrame({
-#         'Director': list(director_avg_rating.keys()),
-#         'Avg_Rating': list(director_avg_rating.values()),
-#         'Movie_Count': [director_movies[d] for d in director_avg_rating.keys()]
-#     })
-    
-#     director_df = director_df.sort_values('Avg_Rating', ascending=False)
-    
-#     return director_df
 
 # App Setup
 st.set_page_config(page_title="🎬 Movie Recommender", layout="wide")
@@ -269,27 +238,6 @@ with tabs[0]:
         fig.update_traces(textposition='inside', textinfo='percent+label')
         st.plotly_chart(fig, use_container_width=True)
         
-        # st.markdown('### Top Directors by Average Rating')
-        # director_df = get_director_stats(orig_df)
-        # top_directors = director_df.head(10)
-        
-        # fig = px.bar(
-        #     top_directors, 
-        #     x="Avg_Rating", 
-        #     y="Director",
-        #     orientation='h',
-        #     color="Movie_Count",
-        #     color_continuous_scale='Viridis',
-        #     labels={"Avg_Rating": "Average IMDb Rating", "Director": "", "Movie_Count": "Number of Movies"}
-        # )
-        # fig.update_layout(
-        #     plot_bgcolor='rgba(0,0,0,0)',
-        #     xaxis=dict(showgrid=False),
-        #     yaxis=dict(showgrid=False, categoryorder='total ascending'),
-        #     margin=dict(l=20, r=20, t=20, b=20),
-        #     height=400
-        # )
-        # st.plotly_chart(fig, use_container_width=True)
     
     with col2:
         st.markdown('### Runtime Distribution')
@@ -339,35 +287,6 @@ with tabs[0]:
             height=400
         )
         st.plotly_chart(fig, use_container_width=True)
-        
-        # st.markdown('### 📅 Rating Trends by Year')
-        
-        # yearly_avg = orig_df.groupby('year')['imdb_rating'].mean().reset_index()
-        # yearly_avg = yearly_avg[yearly_avg['year'] >= 1950]
-        
-        # fig = px.line(
-        #     yearly_avg, 
-        #     x="year", 
-        #     y="imdb_rating",
-        #     color_discrete_sequence=['#FF4B4B'],
-        #     labels={"year": "Year", "imdb_rating": "Average IMDb Rating"}
-        # )
-        # fig.update_layout(
-        #     plot_bgcolor='rgba(0,0,0,0)',
-        #     xaxis=dict(showgrid=False),
-        #     yaxis=dict(showgrid=False, range=[5, 8]),
-        #     margin=dict(l=20, r=20, t=20, b=20),
-        #     height=300
-        # )
-        # fig.add_shape(
-        #     type="line",
-        #     x0=yearly_avg['year'].min(),
-        #     y0=orig_df['imdb_rating'].mean(),
-        #     x1=yearly_avg['year'].max(),
-        #     y1=orig_df['imdb_rating'].mean(),
-        #     line=dict(color="gray", width=1, dash="dash"),
-        # )
-        # st.plotly_chart(fig, use_container_width=True)
 
 # Data Exploration
 with tabs[1]:
@@ -533,7 +452,7 @@ with tabs[2]:
 
 # Recommendation System based on knn
 with tabs[3]:
-    st.header("🎯 Movie Recommendations")
+    st.header("Movie Recommendations")
     movie_input = st.selectbox("Select a movie to find similar ones:", sorted(df['title'].unique()))
     top_n = st.slider("Number of recommendations:", 3, 15, 5)
 
