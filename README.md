@@ -141,7 +141,7 @@ pip install pandas numpy matplotlib seaborn scikit-learn plotly hdbscan streamli
 
 > User can play with entire dataset using this tab
 
-![Movies Explorer Page](Screenshots/Movies_Explorer.png)
+![Movies Explorer Page](Screenshots/Movie_Explorer.png)
 
 ### 🕸️ Clusters
 
