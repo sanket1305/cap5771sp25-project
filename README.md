@@ -129,6 +129,34 @@ pip install pandas numpy matplotlib seaborn scikit-learn plotly hdbscan streamli
 
 ---
 
+## 🖼️ UI Screenshots
+
+### 📈 Insights
+
+> Shows some general insights using plots for different features
+
+![Insights Page](screenshots/Insights.png)
+
+### 🔍 Movies Explorer
+
+> User can play with entire dataset using this tab
+
+![Movies Explorer Page](screenshots/Movies_Explorer.png)
+
+### 🕸️ Clusters
+
+> Data Scientists can use this tab to view the different cluster groupings
+
+![Clusters Page](screenshots/Clusters.png)
+
+### 🎯 Recommendations
+
+> User can choose a movie which they like and they will get the recommendation using KNN.
+
+![Recommendations Page](screenshots/Recommendations.png)
+
+---
+
 ## ⚙️ How to Run
 
 - Download the dataset using the provided links.
