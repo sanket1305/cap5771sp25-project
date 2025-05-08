@@ -7,7 +7,9 @@ Welcome to the **Movie Recommendation System** project! This repository contains
 
 ## 🚀 Project Overview
 
-The system is built on three datasets (detailed in the _"Milestone 1.pdf"_ report). The code in this repository processes these datasets to perform data analysis, generate insightful visualizations, and build a recommendation model.
+The primary objective of this project is to develop a movie recommendation system that suggests relevant movies to users based on their preferred movie input. The system leverages robust and extensive datasets collected from three reliable sources—IMDB, MovieLens, and TMDB—to ensure the recommendations are both accurate and reflective of real-world preferences.
+
+A key strength of this system lies in the trustworthiness and volume of the data, which plays a crucial role in generating meaningful and practical movie suggestions. In addition to recommendation functionality, the project includes an interactive Python-based UI, enabling users to seamlessly explore, filter, and engage with the movie dataset.
 
 To run the project, please review the key files listed below.
 
